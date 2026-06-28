@@ -7,8 +7,6 @@ This is the core brain of Lumi AI Phase 1.
 import os
 from openai import AsyncOpenAI
 
-client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-
 SYSTEM_PROMPT = """
 You are Lumi, an expert AI marketing strategist for small businesses.
 Given a business's context, goals, and tone, generate a detailed,
@@ -24,6 +22,8 @@ Be specific, practical, and tailored to small business constraints (limited budg
 
 
 class CampaignAgent:
+    def __init__(self):
+        self.client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
     async def create(self, context: dict) -> dict:
         user_message = f"""
 Business: {context['business_name']}
@@ -34,7 +34,7 @@ Tone: {context['tone']}
 Generate a full campaign plan.
         """
 
-        response = await client.chat.completions.create(
+        response = await self.client.chat.completions.create(
             model="gpt-4o",
             messages=[
                 {"role": "system", "content": SYSTEM_PROMPT},
