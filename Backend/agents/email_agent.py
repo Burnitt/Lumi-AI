@@ -8,8 +8,6 @@ from openai import AsyncOpenAI
 # from sendgrid import SendGridAPIClient          # uncomment when ready to send
 # from sendgrid.helpers.mail import Mail
 
-client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-
 SYSTEM_PROMPT = """
 You are Lumi, an expert email copywriter for small businesses.
 Write engaging, concise marketing emails that feel personal, not spammy.
@@ -19,6 +17,8 @@ the core message, a clear call-to-action, and a friendly sign-off.
 
 
 class EmailAgent:
+    def __init__(self):
+        self.client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
     async def draft(self, req: dict) -> dict:
         user_message = f"""
 Business: {req['business_name']}
@@ -52,4 +52,3 @@ Write the full email body.
         sg.send(message)
         """
         raise NotImplementedError("SendGrid integration not yet wired up.")
-
